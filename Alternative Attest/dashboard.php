@@ -1,13 +1,17 @@
 <?php
-$resultsFile = 'results.json';
-$results = json_decode(file_get_contents($resultsFile), true);
-?>
+/**
+ * Таблица лидеров
+ */
 
+$resultsFile = "results.json";
+$results = file_exists($resultsFile) ? json_decode(file_get_contents($resultsFile), true) : [];
+
+?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Таблица лидеров</title>
+    <title>Лидеры</title>
 </head>
 <body>
     <h2>Результаты теста</h2>
@@ -18,8 +22,8 @@ $results = json_decode(file_get_contents($resultsFile), true);
         </tr>
         <?php foreach ($results as $result): ?>
             <tr>
-                <td><?= $result['username'] ?></td>
-                <td><?= $result['score'] ?>%</td>
+                <td><?= htmlspecialchars($result['username']) ?></td>
+                <td><?= htmlspecialchars($result['score']) ?>%</td>
             </tr>
         <?php endforeach; ?>
     </table>
