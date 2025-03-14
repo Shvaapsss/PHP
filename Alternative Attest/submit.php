@@ -1,11 +1,29 @@
 <?php
+/**
+ * Обработчик теста
+ */
+
 $dataFile = "data.json";
+$resultsFile = "results.json";
+
+if ($_SERVER["REQUEST_METHOD"] !== "POST") {
+    die("Неверный метод запроса.");
+}
+
+if (!file_exists($dataFile)) {
+    die("Файл с вопросами не найден.");
+}
+
 $jsonData = file_get_contents($dataFile);
 $questionsData = json_decode($jsonData, true);
-$questions = $questionsData["questions"];
+$questions = $questionsData["questions"] ?? [];
 
-$answers = $_POST['answer'];
-$username = trim($_POST['username']);
+$username = trim($_POST['username'] ?? '');
+if (empty($username)) {
+    die("Введите ваше имя.");
+}
+
+$answers = $_POST['answer'] ?? [];
 $score = 0;
 $totalQuestions = count($questions);
 
@@ -14,7 +32,7 @@ foreach ($questions as $index => $q) {
     $userAnswer = $answers[$index] ?? [];
 
     if ($q['type'] === 'radio') {
-        if ($userAnswer == $correctAnswers[0]) {
+        if ($userAnswer === $correctAnswers[0]) {
             $score++;
         }
     } else {
@@ -28,16 +46,11 @@ foreach ($questions as $index => $q) {
 
 $percentage = round(($score / $totalQuestions) * 100);
 
-$resultsFile = 'results.json';
-$results = json_decode(file_get_contents($resultsFile), true);
-$results[] = [
-    'username' => $username,
-    'score' => $percentage
-];
-
+$results = file_exists($resultsFile) ? json_decode(file_get_contents($resultsFile), true) : [];
+$results[] = ['username' => htmlspecialchars($username), 'score' => $percentage];
 file_put_contents($resultsFile, json_encode($results, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
-?>
 
+?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
