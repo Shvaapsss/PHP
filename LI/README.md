@@ -111,6 +111,3 @@
 - Bootstrap 5 — getbootstrap.com  
 - OWASP Cheat Sheet Series — cheatsheetseries.owasp.org  
 
-## 🔗 Ссылка на репозиторий
-
-github.com/yourusername/resourcehub
