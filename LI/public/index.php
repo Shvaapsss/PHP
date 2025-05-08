@@ -1,21 +1,27 @@
 <?php
-require_once '../includes/config.php';
+// Старт сессии для хранения данных о пользователе
 session_start();
 ?>
-<!DOCTYPE html>
-<html>
-<head><title>Главная</title></head>
-<body>
-<h1>Добро пожаловать</h1>
-<p><a href="login.php">Вход</a> | <a href="register.php">Регистрация</a></p>
 
-<h2>Публичный контент</h2>
-<?php
-$result = mysqli_query($conn, "SELECT title, description FROM resources LIMIT 3");
-while ($row = mysqli_fetch_assoc($result)) {
-    echo "<h3>" . htmlspecialchars($row['title']) . "</h3>";
-    echo "<p>" . htmlspecialchars($row['description']) . "</p>";
-}
-?>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная</title>
+</head>
+<body>
+    <h1>Добро пожаловать на главную страницу!</h1>
+
+    <?php
+    // Проверка, авторизован ли пользователь
+    if (!isset($_SESSION['user_id'])) {
+        // Если не авторизован — выводим ссылки на страницу регистрации и входа
+        echo "Вы не авторизованы. Пожалуйста, <a href='login.php'>войдите</a> или <a href='register.php'>зарегистрируйтесь</a>.";
+    } else {
+        // Если пользователь авторизован — показываем ссылку для выхода
+        echo "Добро пожаловать, <strong>{$_SESSION['user_name']}</strong>! <a href='logout.php'>Выйти</a>";
+    }
+    ?>
 </body>
 </html>
